@@ -1,0 +1,72 @@
+/*===========================================================
+  Flash Message Styling
+===========================================================*/
+
+:root {
+    --flash-message-text-col:     #111;
+    --flash-message-bg-col:       #fff;
+    --flash-message-border-col:   #888;
+    --flash-message-accent-col:   #ccc;
+    --flash-message-shadow-col:   #0004;
+
+    --flash-error-col:            #c00;
+    --flash-warning-col:          #c80;
+    --flash-success-col:          #0c0;
+}
+
+
+/* Flash Status Messages --------------------------------- */
+
+#flash-messages {
+    position: fixed;
+    bottom: 1rem;
+    right: 1rem;
+
+    .flash-message {
+        width: 15rem;
+        margin-block: 1rem;
+        padding: 1rem 2rem 1rem 1rem;
+
+        position: relative;
+
+        color: var(--flash-message-text-col);
+        background-color: color-mix(in srgb, var(--flash-message-bg-col), var(--flash-message-accent-col) 20%);
+        border: 1px solid var(--flash-message-border-col);
+        box-shadow: 0 0.1rem 0.5rem var(--flash-message-shadow-col);
+        border-radius: 0.5rem;
+        cursor: pointer;
+
+        transform: translateX(120%);
+        opacity: 0;
+        animation: flash-message-slide-in 500ms forwards;
+
+        &.success { --flash-message-accent-col: var(--flash-success-col); }
+        &.warning { --flash-message-accent-col: var(--flash-warning-col); }
+        &.error   { --flash-message-accent-col: var(--flash-error-col); }
+
+        &:nth-child(2) { animation-delay: 100ms; }
+        &:nth-child(3) { animation-delay: 200ms; }
+        &:nth-child(4) { animation-delay: 300ms; }
+        &:nth-child(5) { animation-delay: 400ms; }
+
+        .close {
+            position: absolute;
+            top: 0;
+            right: 0.5rem;
+            color: var(--flash-message-border-col);
+        }
+    }
+}
+
+@keyframes flash-message-slide-in {
+    from {
+        transform: translateX(120%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+
