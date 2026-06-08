@@ -16,6 +16,7 @@
             <div class="creature">
                 <h3>{{ creature.name }}</h3>
                 <p>Species: <strong>{{ creature.species }}</strong></p>
+                <img src="/static/uploads/{{ creature.image_file }}" alt="Image of {{ creature.name }} the {{ creature.species }}">
             </div>
 
         {% else %}
