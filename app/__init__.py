@@ -108,6 +108,51 @@ def add_creature():
         flash(f"'{name}' the '{species}' added", "success")
         return redirect("/new/creature")
 
+
+#-----------------------------------------------------------
+# Search creatures
+#-----------------------------------------------------------
+@app.get("/search")
+def process_search():
+    search_term = request.args.get('q','')
+    search_match = f"%{search_term}%"
+    search_species = request.args.get('species','')
+    species_match = f"%{search_species}%"
+
+    with connect_db() as db:
+        sql = """
+            SELECT id, species, name, image_file
+            FROM creatures
+            WHERE name LIKE ?
+            AND species LIKE ?
+        """
+        params = (search_match, species_match)
+        creatures = db.execute(sql, params).fetchall()
+        sql2 = """
+                SELECT DISTINCT species FROM creatures ORDER BY species ASC
+            """
+        params2 = ()
+        species = db.execute(sql2, params2).fetchall()
+        species_list = [creature['species'] for creature in species]
+
+        return render_template("pages/creature_list.jinja", creatures=creatures, search_term=search_term, species_list=species_list, species=search_species)
+
+
+#-----------------------------------------------------------
+# Handle creature delete
+#-----------------------------------------------------------
+@app.get("/delete/<int:id>")
+def delete_creature(id):
+        with connect_db() as db:
+            sql = "SELECT name FROM creatures WHERE id=?"
+            params = (id,)
+            creature = db.execute(sql, params).fetchone()
+            sql2 = "DELETE FROM creatures WHERE id=?"
+            delete = db.execute(sql2, params)
+            flash(f"Creature {creature.name} <i>desposed</i>", 'success')
+
+        return redirect("/creatures")
+
 #===========================================================
 # Configure the app
 #===========================================================

@@ -7,7 +7,32 @@
 
 {% block content %}
 
-    <h2>List of Creatures</h2>
+    {% if search_term %}
+        <h2>Searching For '{{ search_term }}' {% if species %}in '{{ species }}' {% endif %}</h2>
+    {% elif species%}
+        <h2>Searching For '{{ species }}'</h2>
+    {% else %}
+        <h2>List of Creatures</h2>
+    {% endif %}
+
+        <form action="/search" method="get">
+            <label>
+                Search Name...
+                <input type="text" name="q">
+            </label>
+            <label>
+                Species
+                <select name="species">
+                    <option selected value="">All</option>
+                    {% for creature in species_list %}
+                        <option>{{ creature }}</option>
+                    {% endfor %}
+                </select>
+            </label>
+            <button>Search</button>
+        </form>
+
+         <p id="creature-count">{{ creatures | count }} creature{% if creatures | count != 1 %}s{% endif %}</p>
 
     <section id="creatures">
 
@@ -17,6 +42,7 @@
                 <h3>{{ creature.name }}</h3>
                 <p>Species: <strong>{{ creature.species }}</strong></p>
                 <img src="/static/uploads/{{ creature.image_file }}" alt="Image of {{ creature.name }} the {{ creature.species }}">
+                <button onclick="window.location.href='/delete/{{ creature.id }}';"" class="utilityButton"><strong>k**l</strong></button>
             </div>
 
         {% else %}
